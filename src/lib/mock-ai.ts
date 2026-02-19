@@ -65,34 +65,116 @@ export async function generateDetailPlan(plan: PlanData): Promise<DetailPlan> {
 
 export async function generateSequenceSkeleton(plan: PlanData): Promise<SequenceSkeleton> {
     const lessonCount = plan.lessonCount || 4;
+    const subject = plan.subject || plan.topicDescription || 'Thema';
     const lessons = [];
 
+    // Context-aware phase names depending on position
+    const phaseNames = (i: number, total: number): { title: string; focus: string; goals: string[] } => {
+        if (i === 1) return {
+            title: `Einstieg: ${subject} entdecken`,
+            focus: 'Vorwissen aktivieren & Problemstellung erschliessen',
+            goals: [`Die SuS können ihr Vorwissen zu «${subject}» aktivieren und eigene Fragen formulieren.`]
+        };
+        if (i === total) return {
+            title: `Abschluss: ${subject} reflektieren`,
+            focus: 'Transfer, Reflexion & Lernprodukt sichern',
+            goals: [`Die SuS können das Gelernte zu «${subject}» auf eine neue Situation übertragen und ihren Lernprozess reflektieren.`]
+        };
+        if (i === 2) return {
+            title: `Grundlagen: ${subject} erarbeiten`,
+            focus: 'Basiswissen erarbeiten & strukturieren',
+            goals: [`Die SuS können die Grundbegriffe und -konzepte zu «${subject}» erklären.`]
+        };
+        if (i === total - 1) return {
+            title: `Vertiefung: ${subject} anwenden`,
+            focus: 'Anwendung in komplexeren Kontexten',
+            goals: [`Die SuS können die erarbeiteten Konzepte zu «${subject}» auf neue Probleme anwenden.`]
+        };
+        return {
+            title: `Erarbeitung ${i - 1}: ${subject} vertiefen`,
+            focus: 'Systematische Erarbeitung & Übung',
+            goals: [`Die SuS können Teilaspekte von «${subject}» eigenständig erarbeiten und üben.`]
+        };
+    };
+
     for (let i = 1; i <= lessonCount; i++) {
+        const phase = phaseNames(i, lessonCount);
         lessons.push({
             id: `l-${i}`,
             lessonNumber: i,
-            title: `Lektion ${i}: Fokus ${i === 1 ? 'Einstieg' : i === lessonCount ? 'Abschluss' : 'Vertiefung'}`,
-            focus: i === 1 ? 'Problemstellung & Aktivierung' : i === lessonCount ? 'Reflexion & Transfer' : 'Erarbeitung & Anwendung',
-            goals: [`Die SuS können Teilaspekt ${i} des Themas bearbeiten.`],
+            title: `Lektion ${i}: ${phase.title}`,
+            focus: phase.focus,
+            goals: phase.goals,
             durationMinutes: plan.durationMinutes || 45,
-            intermediateCheck: i === Math.ceil(lessonCount / 2) ? 'Lernstandserhebung' : undefined
+            intermediateCheck: i === Math.ceil(lessonCount / 2) ? 'Formative Lernstandserhebung — kurzes Quiz oder Peer-Feedback' : undefined
         });
     }
 
     return {
         lessons,
-        progression: 'Vom Konkreten zum Abstrakten, mit integrierter Übungsphase.',
-        overallGoals: ['Das Thema umfassend verstehen', 'Kompetenzen anwenden']
+        progression: `Spiralcurricular: Aufbau von Grundlagen zu «${subject}» über Erarbeitung und Vertiefung bis zur Reflexion und Transfer.`,
+        overallGoals: [
+            `Die SuS können «${subject}» in seinen Grundzügen erklären.`,
+            `Die SuS können das Gelernte auf neue Situationen anwenden.`
+        ]
     };
 }
-export async function generateLessonDetail(plan: PlanData, lessonIndex: number): Promise<DetailPlan> {
-    throw new Error("Not implemented in mock");
+
+export async function generateLessonDetail(plan: PlanData, _lessonIndex: number): Promise<DetailPlan> {
+    // Delegate to the full engine which already handles context
+    return generateDetailPlan(plan);
 }
 
 export async function refineDetailPlan(currentPlan: DetailPlan, instruction: string): Promise<DetailPlan> {
-    // Simplified for brevity, as previous logic was fine. 
-    // In real app, this would use the instruction to mutate phases.
-    return currentPlan;
+    const lower = instruction.toLowerCase();
+    const refined = JSON.parse(JSON.stringify(currentPlan)) as DetailPlan;
+
+    // Keyword-based transformations
+    if (lower.includes('kürz') || lower.includes('kurz') || lower.includes('schneller')) {
+        // Shorten longest phase
+        const sorted = [...refined.phases].sort((a, b) => b.durationMinutes - a.durationMinutes);
+        if (sorted.length > 0) {
+            sorted[0].durationMinutes = Math.max(5, Math.round(sorted[0].durationMinutes * 0.6));
+            sorted[0].description += ' (gekürzt)';
+        }
+    }
+
+    if (lower.includes('gruppenarbeit') || lower.includes('gruppe') || lower.includes('kooperativ')) {
+        const mainPhases = refined.phases.filter(p =>
+            !p.name.toLowerCase().includes('einstieg') && !p.name.toLowerCase().includes('abschluss')
+        );
+        mainPhases.forEach(p => {
+            p.socialForm = 'Gruppenarbeit (3–4 SuS)';
+            if (p.teacherActions) {
+                p.teacherActions = p.teacherActions.replace(/Plenum|Einzelarbeit/gi, 'Gruppenarbeit');
+            }
+        });
+    }
+
+    if (lower.includes('quiz') || lower.includes('test') || lower.includes('prüf')) {
+        const lastPhase = refined.phases[refined.phases.length - 1];
+        if (lastPhase) {
+            lastPhase.description += ' Inkl. kurzes formatives Quiz zur Lernstandserhebung.';
+        }
+    }
+
+    if (lower.includes('digital') || lower.includes('tablet') || lower.includes('app')) {
+        refined.phases.forEach(p => {
+            if (!p.materials) p.materials = [];
+            if (!p.materials.some(m => m.toLowerCase().includes('tablet'))) {
+                p.materials.push('Tablets / digitale Endgeräte');
+            }
+        });
+    }
+
+    if (lower.includes('differenz') || lower.includes('niveau')) {
+        refined.phases.forEach(p => {
+            p.differentiation.niveauA += ' — mit zusätzlichem Scaffolding und Hilfsstruktur.';
+            p.differentiation.niveauC += ' — erweiterte Vertiefungsaufgabe.';
+        });
+    }
+
+    return refined;
 }
 
 export async function reviseShortVersion(current: ShortVersion, prompt: string): Promise<ShortVersion> {

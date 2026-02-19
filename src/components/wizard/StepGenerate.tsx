@@ -7,16 +7,18 @@ import { generateLessonPlan } from '@/lib/ai';
 import { ShortVersion, SequenceSkeleton } from '@/lib/types';
 
 export default function StepGenerate() {
-    const { plan, setShortVersion, setSequenceSkeleton, isGenerating, setGenerating } = usePlanStore();
+    const { plan, setShortVersion, setSequenceSkeleton, isGenerating, setGenerating, setAbortController, cancelGeneration } = usePlanStore();
     const [error, setError] = useState<string | null>(null);
 
     const handleGenerate = async () => {
+        const controller = new AbortController();
+        setAbortController(controller);
         setGenerating(true);
         setError(null);
 
         try {
             if (plan.mode === 'sequence') {
-                const skeleton = await generateLessonPlan(plan, 'sequence') as SequenceSkeleton;
+                const skeleton = await generateLessonPlan(plan, 'sequence', controller.signal) as SequenceSkeleton;
                 setSequenceSkeleton(skeleton);
                 // Derive a synthetic short version from the skeleton instead of a second API call
                 const syntheticSv: ShortVersion = {
@@ -36,10 +38,14 @@ export default function StepGenerate() {
                 };
                 setShortVersion(syntheticSv);
             } else {
-                const sv = await generateLessonPlan(plan, 'short') as ShortVersion;
+                const sv = await generateLessonPlan(plan, 'short', controller.signal) as ShortVersion;
                 setShortVersion(sv);
             }
         } catch (e) {
+            // Don't show error if user cancelled
+            if (e instanceof DOMException && e.name === 'AbortError') {
+                return;
+            }
             console.error('AI Error, using fallback:', e);
             if (plan.mode === 'sequence') {
                 const fallbackSkeleton = await generateSequenceSkeleton(plan);
@@ -47,10 +53,15 @@ export default function StepGenerate() {
             }
             const fallbackSv = await generateShortVersion(plan);
             setShortVersion(fallbackSv);
-            setError('Hinweis: KI-Limit erreicht. Plan wurde mit verbesserter Vorlage erstellt.');
+            setError('Hinweis: KI nicht verfügbar. Ein Entwurf wurde mit der lokalen Vorlage erstellt — passe ihn in Gate A an.');
         } finally {
             setGenerating(false);
+            setAbortController(null);
         }
+    };
+
+    const handleCancel = () => {
+        cancelGeneration();
     };
 
     const hasGenerated = plan.shortVersion !== null;
@@ -63,7 +74,7 @@ export default function StepGenerate() {
             </p>
 
             {error && (
-                <div className="alert alert-error mb-4">{error}</div>
+                <div className="alert alert-warning mb-4">{error}</div>
             )}
 
             {!hasGenerated && !isGenerating && (
@@ -98,6 +109,13 @@ export default function StepGenerate() {
                         <div className="skeleton-block mt-6" />
                         <div className="skeleton-block" />
                         <div className="skeleton-text" style={{ width: '70%', margin: '0 auto' }} />
+                        <button
+                            className="btn btn-ghost mt-4"
+                            onClick={handleCancel}
+                            type="button"
+                        >
+                            ✕ Abbrechen
+                        </button>
                     </div>
                 </div>
             )}

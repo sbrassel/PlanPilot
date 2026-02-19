@@ -8,7 +8,7 @@ import { DetailPlan } from '@/lib/types';
 import { runQualityChecks } from '@/lib/quality-checks';
 
 export default function StepDetail() {
-    const { plan, setDetailPlan, isGenerating, setGenerating } = usePlanStore();
+    const { plan, setDetailPlan, isGenerating, setGenerating, setAbortController, cancelGeneration } = usePlanStore();
     const [error, setError] = useState<string | null>(null);
     const [showRefine, setShowRefine] = useState(false);
     const [refineText, setRefineText] = useState('');
@@ -34,19 +34,25 @@ export default function StepDetail() {
 
 
     const handleGenerate = async () => {
+        const controller = new AbortController();
+        setAbortController(controller);
         setGenerating(true);
         setError(null);
 
         try {
-            const dp = await generateLessonPlan(plan, 'detail') as DetailPlan;
+            const dp = await generateLessonPlan(plan, 'detail', controller.signal) as DetailPlan;
             setDetailPlan(dp);
         } catch (e) {
+            if (e instanceof DOMException && e.name === 'AbortError') {
+                return;
+            }
             console.error('AI Error, using fallback:', e);
             const fallbackPlan = await generateDetailPlan(plan);
             setDetailPlan(fallbackPlan);
-            setError('KI-Quota überschritten. Ein strukturierter Plan wurde trotzdem erstellt (Fallback-Logik).');
+            setError('KI nicht verfügbar. Ein strukturierter Plan wurde mit der lokalen Vorlage erstellt — du kannst ihn unten anpassen.');
         } finally {
             setGenerating(false);
+            setAbortController(null);
         }
     };
 
@@ -94,6 +100,13 @@ export default function StepDetail() {
                     <div className="skeleton-block mt-6" />
                     <div className="skeleton-block" />
                     <div className="skeleton-block" />
+                    <button
+                        className="btn btn-ghost mt-4"
+                        onClick={cancelGeneration}
+                        type="button"
+                    >
+                        ✕ Abbrechen
+                    </button>
                 </div>
             )}
 

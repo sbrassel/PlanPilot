@@ -127,7 +127,16 @@ export default function StepContext() {
                         min={3}
                         max={12}
                         value={plan.lessonCount}
-                        onChange={e => usePlanStore.getState().updatePlan({ lessonCount: parseInt(e.target.value) || 6 })}
+                        onChange={e => {
+                            const raw = parseInt(e.target.value);
+                            if (isNaN(raw)) return;
+                            usePlanStore.getState().updatePlan({ lessonCount: raw });
+                        }}
+                        onBlur={e => {
+                            const raw = parseInt(e.target.value);
+                            const clamped = isNaN(raw) ? 6 : Math.min(12, Math.max(3, raw));
+                            usePlanStore.getState().updatePlan({ lessonCount: clamped });
+                        }}
                     />
                     <span className="form-hint">3–12 Lektionen</span>
                 </div>
@@ -164,7 +173,16 @@ export default function StepContext() {
                             min={1}
                             max={35}
                             value={plan.classProfile.classSize}
-                            onChange={e => setClassSize(parseInt(e.target.value) || 1)}
+                            onChange={e => {
+                                const raw = parseInt(e.target.value);
+                                if (isNaN(raw)) return;
+                                setClassSize(raw);
+                            }}
+                            onBlur={e => {
+                                const raw = parseInt(e.target.value);
+                                const clamped = isNaN(raw) ? 20 : Math.min(35, Math.max(1, raw));
+                                setClassSize(clamped);
+                            }}
                         />
                     </div>
 

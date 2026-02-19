@@ -52,6 +52,7 @@ interface PlanStore {
     validationErrors: string[];
     undoStack: PlanData[];
     redoStack: PlanData[];
+    abortController: AbortController | null;
 
     // Edited short version (for diff comparison)
     editedShortVersion: ShortVersion | null;
@@ -92,6 +93,8 @@ interface PlanStore {
     setDetailPlan: (dp: DetailPlan) => void;
     setSequenceSkeleton: (ss: SequenceSkeleton) => void;
     setEditedShortVersion: (sv: ShortVersion) => void;
+    setAbortController: (controller: AbortController | null) => void;
+    cancelGeneration: () => void;
 
     // Gates
     approveGateA: () => void;
@@ -159,6 +162,7 @@ export const usePlanStore = create<PlanStore>((set, get) => {
         redoStack: [],
         editedShortVersion: null,
         lessonGeneratingIndex: null,
+        abortController: null,
 
         // --- Navigation ---
 
@@ -286,6 +290,16 @@ export const usePlanStore = create<PlanStore>((set, get) => {
         setEditedShortVersion: (sv) => {
             set({ editedShortVersion: sv });
             get().updatePlan({ status: 'edited' });
+        },
+
+        setAbortController: (controller) => set({ abortController: controller }),
+
+        cancelGeneration: () => {
+            const { abortController } = get();
+            if (abortController) {
+                abortController.abort();
+            }
+            set({ abortController: null, isGenerating: false });
         },
 
         // --- Gates ---

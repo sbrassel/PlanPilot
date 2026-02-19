@@ -31,18 +31,28 @@ async function fetchWithRetry(url: string, options: RequestInit, retries = MAX_R
     throw new Error('Unexpected: retry loop exited without returning');
 }
 
-export async function generateLessonPlan(plan: PlanData, type: 'short' | 'detail' | 'sequence' = 'short'): Promise<ShortVersion | DetailPlan | SequenceSkeleton> {
+export async function generateLessonPlan(
+    plan: PlanData,
+    type: 'short' | 'detail' | 'sequence' = 'short',
+    signal?: AbortSignal
+): Promise<ShortVersion | DetailPlan | SequenceSkeleton> {
     const response = await fetchWithRetry('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ plan, type }),
+        signal,
     });
 
     const data = await response.json();
     return data as ShortVersion | DetailPlan | SequenceSkeleton;
 }
 
-export async function reviseLessonPlan(plan: PlanData, currentShortVersion: ShortVersion, instruction: string): Promise<ShortVersion> {
+export async function reviseLessonPlan(
+    plan: PlanData,
+    currentShortVersion: ShortVersion,
+    instruction: string,
+    signal?: AbortSignal
+): Promise<ShortVersion> {
     const response = await fetchWithRetry('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -50,6 +60,7 @@ export async function reviseLessonPlan(plan: PlanData, currentShortVersion: Shor
             plan: { ...plan, currentShortVersion, revisionInstruction: instruction },
             type: 'revise',
         }),
+        signal,
     });
 
     const data = await response.json();
