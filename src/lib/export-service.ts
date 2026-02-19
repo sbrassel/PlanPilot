@@ -10,6 +10,7 @@ function levelLabel(level: string | null): string {
     const labels: Record<string, string> = {
         kg: 'Kindergarten', primar: 'Primar', sek1: 'Sek I',
         '10sj': '10. Schuljahr', gymnasium: 'Gymnasium',
+        berufsfachschule: 'Berufsfachschule',
     };
     return level ? labels[level] || level : '—';
 }

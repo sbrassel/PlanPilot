@@ -4,7 +4,7 @@
 
 // --- Enums / Literal Types ---
 
-export type Level = 'kg' | 'primar' | 'sek1' | '10sj' | 'gymnasium';
+export type Level = 'kg' | 'primar' | 'sek1' | '10sj' | 'gymnasium' | 'berufsfachschule';
 export type PlanMode = 'single' | 'sequence' | 'unit';
 export type LearningGoalType = 'knowledge' | 'application' | 'reflection' | 'transfer';
 export type Heterogeneity = 'low' | 'medium' | 'high';

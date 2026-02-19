@@ -11,6 +11,7 @@ export const LEVEL_OPTIONS = [
     { value: 'sek1', label: 'Sek I' },
     { value: '10sj', label: '10. Schuljahr' },
     { value: 'gymnasium', label: 'Gymnasium' },
+    { value: 'berufsfachschule', label: 'Berufsfachschule' },
 ] as const;
 
 // --- Duration Options ---
