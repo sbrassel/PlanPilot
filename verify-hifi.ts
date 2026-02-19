@@ -19,7 +19,9 @@ const testPlan: PlanData = {
     gateAApproved: false,
     gateBApproved: false,
     classProfile: { classSize: 20, heterogeneity: 'medium', languageLevel: 'b2' },
-    specialNeeds: ''
+    specialNeeds: '',
+    learningGoalType: 'application',
+    curriculumMappings: [],
 };
 
 async function runTest() {
