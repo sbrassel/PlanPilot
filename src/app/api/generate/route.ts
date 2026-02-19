@@ -208,9 +208,28 @@ QUALITÄTSANFORDERUNGEN:
 
         return NextResponse.json(result.object);
     } catch (error) {
-        console.error('AI Generation Error:', error);
+        // Sanitize: never log full error objects that might contain API keys
+        const message = error instanceof Error ? error.message : 'Unknown error';
+        const safeMessage = message.replace(/sk-[a-zA-Z0-9_-]+/g, '[REDACTED]');
+        console.error('AI Generation Error:', safeMessage);
+
+        // Classify error for user-friendly response
+        if (safeMessage.includes('rate') || safeMessage.includes('429') || safeMessage.includes('quota')) {
+            return NextResponse.json(
+                { error: 'OpenAI Rate-Limit erreicht. Bitte warte 30 Sekunden und versuche es erneut.' },
+                { status: 429 }
+            );
+        }
+
+        if (safeMessage.includes('timeout') || safeMessage.includes('ETIMEDOUT')) {
+            return NextResponse.json(
+                { error: 'Die Anfrage hat zu lange gedauert. Bitte versuche es erneut.' },
+                { status: 504 }
+            );
+        }
+
         return NextResponse.json(
-            { error: 'Failed to generate content', details: error instanceof Error ? error.message : String(error) },
+            { error: 'Inhalt konnte nicht generiert werden. Bitte versuche es erneut.' },
             { status: 500 }
         );
     }
