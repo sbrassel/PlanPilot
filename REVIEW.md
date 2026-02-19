@@ -105,5 +105,6 @@
 ### Empfehlungen für weitere Output-Qualität
 
 1. **Prompt-Engineering**: Die aktuellen Prompts in `route.ts` sind bereits gut (Schweiz-spezifisch, LP21, AVIVA). Empfehlung: Few-Shot-Examples pro Stufe hinzufügen.
-2. **Schema-Validation**: Der `generateObject()`-Call mit Zod-Schema ist der richtige Ansatz. Empfehlung: Post-Validation auf Phasen-Zeitensumme.
-3. **Evaluation Harness**: Noch nicht gebaut — wäre der nächste grosse Qualitätshebel (5-10 Golden-Inputs, automatischer Check auf Vollständigkeit/Kohärenz).
+2. [x] **Refine Lesson Output**: Ensure "ready-to-teach" quality with script-like instructions and high-fidelity didactic components.
+3. **Schema-Validation**: Der `generateObject()`-Call mit Zod-Schema ist der richtige Ansatz. Empfehlung: Post-Validation auf Phasen-Zeitensumme.
+4. **Evaluation Harness**: Noch nicht gebaut — wäre der nächste grosse Qualitätshebel (5-10 Golden-Inputs, automatischer Check auf Vollständigkeit/Kohärenz).
