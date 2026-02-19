@@ -159,6 +159,7 @@ export function testTC04_PlanBForDigitalContent(): TestResult {
                 // No planBAlternative!
             }],
             planBIncluded: false,
+            reflectionNotes: '',
         },
     });
 
