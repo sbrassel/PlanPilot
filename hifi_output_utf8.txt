@@ -1,0 +1,41 @@
+﻿--- GENERATING HIFI PLAN ---
+DIAGNOSIS:
+{
+  "coreConcept": "Der geschlossene Stromkreis und der Energiefluss",
+  "misconceptions": [
+    "Strom wird \"verbraucht\" (statt Energieumwandlung)",
+    "Fehlende Unterscheidung zwischen Ursache und Wirkung",
+    "├£bergenzealisierung von Einzelf├ñllen"
+  ],
+  "thresholdConcept": "Der geschlossene Stromkreis und der Energiefluss",
+  "relevance": "Sicherer Umgang mit Elektrizit├ñt im Alltag."
+}
+
+RUBRIC:
+[
+  {
+    "criteria": "Fachverst├ñndnis",
+    "levelA": "Nennt Basisbegriffe korrekt.",
+    "levelB": "Erkl├ñrt Zusammenh├ñnge verst├ñndlich.",
+    "levelC": "Analysiert komplexe Wechselwirkungen."
+  },
+  {
+    "criteria": "Methodenkompetenz",
+    "levelA": "F├╝hrt Arbeitsschritte nach Anleitung aus.",
+    "levelB": "Plant das Vorgehen selbstst├ñndig.",
+    "levelC": "Reflektiert das methodische Vorgehen kritisch."
+  },
+  {
+    "criteria": "Kommunikation",
+    "levelA": "Verwendet Alltagssprache.",
+    "levelB": "Nutzt Fachbegriffe meist korrekt.",
+    "levelC": "Argumentiert pr├ñzise und adressatengerecht."
+  }
+]
+
+PHASES:
+- 7' A ÔÇö Ankommen & Aktivieren
+- 7' V ÔÇö Vorwissen aktivieren
+- 11' I ÔÇö Informieren
+- 14' V ÔÇö Verarbeiten
+- 6' A ÔÇö Auswerten
