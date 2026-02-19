@@ -291,15 +291,15 @@ function buildLessonFlow(ctx: LessonContext, plan: PlanData): Phase[] {
     const structure = (plan as any).didacticSlots?.slot1 || 'standard';
 
     if (structure === 'aviva') {
-        // AVIVA Structure (High Fidelity)
+        // AVIVA Structure (High Fidelity Mock)
 
         // A - Ankommen & Aktivieren
         const tA = Math.round(dur * 0.15);
         const p1 = {
             name: 'A — Ankommen & Aktivieren',
-            desc: `Herstellen von Präsenz und kognitive Aktivierung durch ${ctx.misconception}.`,
-            teacher: `LP begrüsst und präsentiert das "Threshold Concept" als Rätsel/Bild.\nLP: "Stimmt das so?" (Provokation)`,
-            child: `SuS kommen mental an, prüfen das Rätsel und bilden erste Hypothesen.`,
+            desc: `Herstellen von Präsenz und kognitive Aktivierung durch das Schwellenkonzept «${ctx.thresholdConcept}».`,
+            teacher: `LP begrüsst die Klasse an der Tür. LP startet die Präsentation mit einem provokanten Bild (z.B. Karikatur oder Meme passend zum Thema).\nLP fragt in die Runde: «Was seht ihr hier? Was ist falsch an diesem Bild?» (Wartezeit 10 Sek.)\nLP sammelt erste Zurufe kommentarlos an der Tafel. LP: «Heute werden wir genau dieses Missverständnis aufklären.»`,
+            child: `SuS kommen an, legen ihre Materialien bereit. Sie betrachten den Bildimpuls still.\nSuS: «Das kann so nicht stimmen, weil...» (Erste Hypothesenbildung).\nSuS aktivieren ihr Vorwissen und stellen Vermutungen an.`,
             op: 'Hypothesen bilden',
             check: 'Blitzlicht: Wer hat eine Idee?'
         };
@@ -308,9 +308,9 @@ function buildLessonFlow(ctx: LessonContext, plan: PlanData): Phase[] {
         const tV = Math.round(dur * 0.15);
         const p2 = {
             name: 'V — Vorwissen aktivieren',
-            desc: 'Explizitmachung der Präkonzepte.',
-            teacher: `LP fordert SuS auf, ihr Vorwissen zu notieren (Cluster).\nLP clustert an der Tafel nach Kategorien.`,
-            child: `SuS notieren Assoziationen und verknüpfen sie mit dem neuen Thema.`,
+            desc: 'Explizitmachung der Präkonzepte und Vernetzung.',
+            teacher: `LP gibt den Auftrag: «Notiert in 2 Minuten alles, was ihr schon zu diesem Begriff wisst, auf Post-Its.» (Cluster-Methode).\nLP geht herum, beobachtet und clustert die Zettel anschliessend an der Tafel nach Kategorien (z.B. Ursache/Wirkung).\nLP würdigt das Vorwissen: «Wir sehen, ihr wisst schon viel über X, aber Y ist noch unklar.»`,
+            child: `SuS arbeiten in Einzelarbeit, schreiben Assoziationen auf Zettel.\nSuS kommen nach vorne und kleben ihre Zettel an die Tafel.\nSuS vergleichen ihr Wissen mit dem der anderen.`,
             op: 'Assoziieren & Strukturieren',
             check: 'Cluster an der Tafel.'
         };
@@ -320,8 +320,8 @@ function buildLessonFlow(ctx: LessonContext, plan: PlanData): Phase[] {
         const p3 = {
             name: 'I — Informieren',
             desc: 'Instruktion und Erarbeitung neuer Inhalte.',
-            teacher: `LP präsentiert den Kerninhalt (Input). Fokus auf ${ctx.keywords[0] || 'Kernbegriff'}.\nLP nutzt Visualisierungen (Dual Coding).`,
-            child: `SuS folgen dem Input, machen Notizen (Cornertaking) und stellen Verständnisfragen.`,
+            teacher: `LP präsentiert den Kerninhalt (Input). Fokus auf ${ctx.keywords[0] || 'Kernbegriff'}.\nLP nutzt Visualisierungen (Dual Coding) und erklärt: «Hier seht ihr den Zusammenhang zwischen A und B.»\nLP stoppt nach 5 Minuten für eine Verständnisfrage (Hinge Point Question): «Zeigt mit den Fingern 1-5, wie sicher ihr euch seid.»`,
+            child: `SuS folgen dem Input aktiv (Active Listening).\nSuS machen sich Notizen nach der Cornertaking-Methode.\nSuS beantworten die Hinge-Point-Frage per Handzeichen.`,
             op: 'Aufnehmen & Verarbeiten',
             check: 'Verständnisfrage (Hinge Point Question).'
         };
@@ -331,8 +331,8 @@ function buildLessonFlow(ctx: LessonContext, plan: PlanData): Phase[] {
         const p4 = {
             name: 'V — Verarbeiten',
             desc: 'Vertiefte Auseinandersetzung und Anwendung.',
-            teacher: `LP gibt Übungsaufgaben (gestuft A/B/C).\nLP coacht und gibt formativ Feedback.`,
-            child: `SuS wenden das Wissen auf ein Fallbeispiel an.\nSie lösen das Einstiegs-Rätsel neu.`,
+            teacher: `LP verteilt die Aufgabenblätter (A/B/C).\nLP: «Wählt euer Niveau. Wer Hilfe braucht, kommt zum 'Support-Tisch' vorne rechts.»\nLP coacht einzelne Gruppen, gibt formativ Feedback, aber keine Lösungen vor.`,
+            child: `SuS wählen ihr Niveau selbstständig (Self-Regulated Learning).\nSie bearbeiten die Aufgabe (z.B. Fallbeispiel analysieren).\nSie nutzen Hilfsmittel (Wortliste, Scaffolding) bei Bedarf.`,
             op: 'Anwenden & Transferieren',
             check: 'Lernprodukt (z.B. Lösungsskizze).'
         };
@@ -342,8 +342,8 @@ function buildLessonFlow(ctx: LessonContext, plan: PlanData): Phase[] {
         const p5 = {
             name: 'A — Auswerten',
             desc: 'Metakognitive Reflexion des Lernprozesses.',
-            teacher: `LP fragt: "Wie hat sich eure Meinung verändert?"\nLP würdigt den Zuwachs an Fachsprache.`,
-            child: `SuS vergleichen Vorwissen (V) mit neuem Wissen (I).`,
+            teacher: `LP fragt: «Wie hat sich eure Meinung vom Anfang verändert?»\nLP bittet SuS, ihren Lernzuwachs auf einer Zielscheibe (an der Tür) beim Rausgehen zu markieren (Exit Ticket).\nLP verabschiedet die Klasse.`,
+            child: `SuS vergleichen Vorwissen (V) mit neuem Wissen (I).\nSuS reflektieren: «Ich habe heute verstanden, dass...»\nSuS geben beim Rausgehen ihr Exit Ticket ab.`,
             op: 'Reflektieren (Metakognition)',
             check: 'Rubrik-Selbsteinschätzung.'
         };
@@ -366,33 +366,33 @@ function buildLessonFlow(ctx: LessonContext, plan: PlanData): Phase[] {
 
         const p1 = {
             name: 'Einstieg: Kognitive Dissonanz',
-            desc: `Konfrontation mit ${ctx.misconception}.`,
-            teacher: `LP: "Viele denken, dass... aber ist das wahr?"`,
-            child: `SuS diskutieren den Widerspruch.`,
+            desc: `Konfrontation mit einer Fehlvorstellung zu «${ctx.topic}».`,
+            teacher: `LP zeigt ein kontroverses Zitat: «${ctx.topic} braucht niemand.»\nLP fragt: «Wer stimmt zu? Steht auf!» (Barometer-Methode).\nLP moderiert die kurze Diskussion: «Warum seht ihr das anders?»`,
+            child: `SuS positionieren sich körperlich im Raum.\nSuS begründen ihre Meinung spontan.\nSuS werden kognitiv aktiviert und motiviert.`,
             op: 'Problematisieren',
             check: 'Meinungsbild.'
         };
         const p2 = {
             name: 'Erarbeitung: Deep Dive',
-            desc: `Analyse von Material zu «${ctx.topic}».`,
-            teacher: `LP moderiert und scaffolded den Prozess.`,
-            child: `SuS bearbeiten Material analytisch.`,
+            desc: `Analyse von Material (Text/Video) zu «${ctx.topic}».`,
+            teacher: `LP erklärt den Arbeitsauftrag: «Analysiert die Quelle in Partnerarbeit. Sucht nach Hinweisen auf...»\nLP stellt Timer auf 15 Minuten.\nLP beobachtet und unterstützt bei Verständnisfragen.`,
+            child: `SuS lesen/schauen das Material aktiv.\nSie markieren Schlüsselbegriffe (Marking).\nSie tauschen sich mit dem Partner aus (Think-Pair-Share).`,
             op: 'Analysieren',
             check: 'Zwischenergebnis.'
         };
         const p3 = {
             name: 'Sicherung & Transfer',
-            desc: 'Synthese der Ergebnisse.',
-            teacher: `LP bündelt die Erkenntnisse.`,
-            child: `SuS präsentieren und transferieren.`,
+            desc: 'Synthese der Ergebnisse und Anwendung.',
+            teacher: `LP sammelt Ergebnisse im Plenum (Visualizer/Tafel).\nLP fordert Transfer: «Was bedeutet das für unser Beispiel von vorhin?»`,
+            child: `SuS präsentieren ihre Ergebnisse kurz und prägnant.\nSuS verknüpfen das Neue mit dem Bekannten.`,
             op: 'Synthetisieren',
             check: 'Präsentation.'
         };
         const p4 = {
             name: 'Abschluss: Meta-View',
-            desc: 'Rückblick auf das Lernen.',
-            teacher: `LP: "Was war heute die schwierigste Hürde?"`,
-            child: `SuS reflektieren ihren Lernweg.`,
+            desc: 'Rückblick und Ausblick.',
+            teacher: `LP: «Zusammenfassend können wir sagen...»\nLP gibt Hausaufgabe/Ausblick auf nächste Stunde.\nLP: «Danke für eure Mitarbeit!»`,
+            child: `SuS packen zusammen.\nSuS notieren Hausaufgaben.`,
             op: 'Reflektieren',
             check: 'Exit-Ticket.'
         };

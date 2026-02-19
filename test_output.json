@@ -1,0 +1,81 @@
+{
+  "phases": [
+    {
+      "id": "1",
+      "name": "Einstieg",
+      "durationMinutes": 5,
+      "description": "Mit einem spannenden Einstieg Interesse wecken.",
+      "teacherActions": "Begrüßt die Klasse, startet mit einem Bildimpuls: Eine Karikatur aus der Zeit von 1848, die die Vorteile des neuen Bundesstaats illustriert.",
+      "childActions": "Schüler:innen schauen sich die Karikatur an und äußern spontan ihre Gedanken oder Vermutungen zur dargestellten Situation, vielleicht im Plenum oder in kleinen Gruppen von Sitznachbarn.",
+      "didacticComment": "Ein visueller Einstieg hilft, Vorwissen zu aktivieren und ist barrierearm.",
+      "materials": [
+        "Karikatur aus 1848 (Printversion oder Beamer)"
+      ],
+      "socialForm": "Plenum",
+      "differentiation": {
+        "niveauA": "Schüler:innen mit DaZ erhalten die Karikatur mit vereinfachten Beschreibungen.",
+        "niveauB": "Schüler:innen beschreiben und interpretieren die Karikatur in eigenen Worten.",
+        "niveauC": "Schüler:innen analysieren die Karikatur, indem sie Bezüge zur heutigen politischen Struktur herstellen."
+      },
+      "planBAlternative": "Falls keine technischen Mittel verfügbar sind, wird die Karikatur in der Mitte des Kreises auf Papier gezeigt."
+    },
+    {
+      "id": "2",
+      "name": "Erarbeitung",
+      "durationMinutes": 25,
+      "description": "Kooperative Gruppenarbeit zur Erarbeitung der Gründe des Bundesstaats 1848.",
+      "teacherActions": "Organisiert die Klasse in Kleingruppen und verteilt Materialpakete (Textbausteine mit Informationen zu wirtschaftlichen, politischen und gesellschaftlichen Gründen).",
+      "childActions": "In Gruppen lesen die Schüler:innen die Texte, diskutieren und erstellen ein gemeinsames Plakat mit den wichtigsten Gründen für die Gründung des Bundesstaats.",
+      "didacticComment": "Durch kooperatives Lernen werden soziale Fähigkeiten gefördert und alle Schüler:innen aktiv einbezogen.",
+      "materials": [
+        "Informationskarten (wirtschaftliche, politische, gesellschaftliche Gründe)",
+        "Plakatpapier und Stifte"
+      ],
+      "socialForm": "Gruppenarbeit",
+      "differentiation": {
+        "niveauA": "Erhalten textlich vereinfachte Materialien und Bildkarten zur Unterstützung.",
+        "niveauB": "Arbeiten mit den Standardmaterialien und haben Leitfragen zur Orientierung.",
+        "niveauC": "Erhalten komplexere Materialien, übernehmen die Moderation in den Gruppen."
+      },
+      "planBAlternative": "Falls die Gruppenarbeit nicht möglich ist, wird eine Podiumsdiskussion mit vorbereiteten Rollen durchgeführt."
+    },
+    {
+      "id": "3",
+      "name": "Sicherung",
+      "durationMinutes": 10,
+      "description": "Präsentation der Gruppenergebnisse und kreative Zusammenfassung.",
+      "teacherActions": "Leitet die Präsentation der Arbeitsergebnisse im Plenum; gibt Feedback und ergänzt wichtige Informationen.",
+      "childActions": "Jede Gruppe präsentiert ihre Ergebnisse. Abschließend erstellen die Schüler:innen in einer gemeinsamen digitalen Umfrage (z.B. Mentimeter) die drei wichtigsten Gründe mit einer kurzen Begründung.",
+      "didacticComment": "Durch die Präsentation wird das Erarbeitete sichtbar, die digitale Umfrage fördert die aktive Teilnahme.",
+      "materials": [
+        "Mentimeter (oder anderes Tool) für Live-Abstimmung"
+      ],
+      "socialForm": "Plenum",
+      "differentiation": {
+        "niveauA": "Erhalten Unterstützung beim Präsentieren durch Satzanfänge und visualisierte Beispiele.",
+        "niveauB": "Präsentieren frei vor der Klasse mit eigenen Notizen.",
+        "niveauC": "Übernehmen die Leitung der digitalen Abstimmung, delegieren Aufgaben."
+      },
+      "planBAlternative": "Falls keine digitalen Tools zur Verfügung stehen, erfolgt die Abstimmung durch Abkleben von Punkte-Stickern auf Plakatkarten."
+    }
+  ],
+  "planBIncluded": true,
+  "reflectionNotes": "Reflexion über den Einsatz der digitalen Tools und deren Effektivität in einer heterogenen Klasse. Anpassungen bei der Materialverwendung für die nächsten Einheiten prüfen.",
+  "didacticDiagnosis": {
+    "coreConcept": "Die wichtigsten Gründe für die Gründung des Bundesstaats 1848.",
+    "misconceptions": [
+      "Die Schweiz war bereits vor 1848 ein Bundesstaat.",
+      "Die Gründung war nur politisch motiviert."
+    ],
+    "thresholdConcept": "Verständnis der komplexen Wechselwirkungen zwischen den Gründen der Gründung.",
+    "relevance": "Schüler:innen verstehen die historische Relevanz und deren Einfluss auf die heutige politische Struktur."
+  },
+  "assessmentRubric": [
+    {
+      "criteria": "Verständnis der Gründe für die Gründung des Bundesstaats 1848",
+      "levelA": "Nennen mindestens einen Grund mit Unterstützung.",
+      "levelB": "Nennen und erklären zwei Gründe selbstständig.",
+      "levelC": "Diskutieren kritisch drei oder mehr Gründe und ziehen Parallelen zur heutigen Situation."
+    }
+  ]
+}

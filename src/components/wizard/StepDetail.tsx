@@ -7,6 +7,21 @@ import { generateDetailPlan, refineDetailPlan } from '@/lib/mock-ai';
 import { DetailPlan } from '@/lib/types';
 import { runQualityChecks } from '@/lib/quality-checks';
 
+function formatScriptText(text?: string) {
+    if (!text) return '';
+    // Replace guillemets with styled spans or just keep line breaks
+    // For now, simple line break preservation is key
+    return text.split('\n').map((line, i) => (
+        <span key={i} className="block mb-1">
+            {line.includes('«') ? (
+                <span className="text-primary-dark font-medium">{line}</span>
+            ) : (
+                line
+            )}
+        </span>
+    ));
+}
+
 export default function StepDetail() {
     const { plan, setDetailPlan, isGenerating, setGenerating, setAbortController, cancelGeneration } = usePlanStore();
     const [error, setError] = useState<string | null>(null);
@@ -30,8 +45,6 @@ export default function StepDetail() {
             setGenerating(false);
         }
     };
-
-
 
     const handleGenerate = async () => {
         const controller = new AbortController();
@@ -71,9 +84,9 @@ export default function StepDetail() {
 
     return (
         <div className="step-content-area">
-            <h2>Detailplanung</h2>
+            <h2>Detailplanung (Pfannenfertig)</h2>
             <p className="text-secondary mb-6">
-                Vollständige Unterrichtsplanung mit Phasen, Differenzierung und Plan B.
+                Vollständiges Drehbuch für deinen Unterricht.
             </p>
 
             {error && <div className="alert alert-error mb-4">{error}</div>}
@@ -83,10 +96,10 @@ export default function StepDetail() {
                     <div style={{ fontSize: '48px', marginBottom: 'var(--space-4)' }}>📝</div>
                     <h3 className="mb-2">Detailplanung generieren</h3>
                     <p className="text-secondary mb-6">
-                        Basierend auf deiner freigegebenen Kurzversion erstellt die KI eine vollständige Planung.
+                        Basierend auf deiner freigegebenen Kurzversion erstellt die KI ein präzises Drehbuch.
                     </p>
                     <button className="btn btn-primary btn-lg" onClick={handleGenerate} type="button">
-                        ✨ Detailplanung erstellen
+                        ✨ Drehbuch erstellen
                     </button>
                 </div>
             )}
@@ -96,7 +109,7 @@ export default function StepDetail() {
                     <div className="spinner mb-4" role="status">
                         <span className="sr-only">Wird generiert…</span>
                     </div>
-                    <h3>Detailplanung wird erstellt…</h3>
+                    <h3>Drehbuch wird geschrieben…</h3>
                     <div className="skeleton-block mt-6" />
                     <div className="skeleton-block" />
                     <div className="skeleton-block" />
@@ -166,7 +179,7 @@ export default function StepDetail() {
                         </div>
                     )}
 
-                    {/* Didactic Diagnosis (Block L) */}
+                    {/* Didactic Diagnosis */}
                     {plan.detailPlan.didacticDiagnosis && (
                         <div className="card mb-6 border-l-4 border-accent">
                             <h3 className="mb-4">🎓 Didaktische Diagnose</h3>
@@ -193,83 +206,99 @@ export default function StepDetail() {
 
                     {/* Phases */}
                     {plan.detailPlan.phases.map((phase, i) => (
-                        <div key={phase.id} className="detail-phase-card mb-4">
-                            <div className="detail-phase-header">
-                                <div className="detail-phase-title">
-                                    <span className="detail-phase-number">{i + 1}</span>
-                                    <h3>{phase.name}</h3>
+                        <div key={phase.id} className="detail-phase-card mb-4 p-6 border rounded-lg shadow-sm bg-white">
+                            <div className="flex justify-between items-center mb-4 border-b pb-2">
+                                <div className="flex items-center gap-3">
+                                    <span className="bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">{i + 1}</span>
+                                    <h3 className="m-0 text-xl font-semibold">{phase.name}</h3>
                                 </div>
-                                <span className="badge badge-draft text-mono">{phase.durationMinutes} Min</span>
+                                <span className="bg-gray-100 px-3 py-1 rounded text-mono font-bold text-lg">{phase.durationMinutes} Min</span>
                             </div>
 
-                            <p className="mb-4">{phase.description}</p>
+                            <p className="mb-6 italic text-gray-600 bg-gray-50 p-3 rounded border-l-4 border-gray-300">
+                                "{phase.description}"
+                            </p>
 
-                            <div className="detail-grid">
-                                <div className="detail-cell">
-                                    <span className="form-label">Lehrperson</span>
-                                    <p className="text-sm">{phase.teacherActions}</p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                                    <span className="form-label text-blue-800 block mb-2">👩‍🏫 Lehrperson (Script)</span>
+                                    <div className="text-sm whitespace-pre-wrap leading-relaxed text-gray-800">
+                                        {formatScriptText(phase.teacherActions)}
+                                    </div>
                                 </div>
-                                <div className="detail-cell">
-                                    <span className="form-label">SuS-Aktivität</span>
-                                    <p className="text-sm">{phase.childActions}</p>
+                                <div className="bg-green-50 p-4 rounded-lg border border-green-100">
+                                    <span className="form-label text-green-800 block mb-2">🧑‍🎓 Schüler:innen</span>
+                                    <div className="text-sm whitespace-pre-wrap leading-relaxed text-gray-800">
+                                        {formatScriptText(phase.childActions)}
+                                    </div>
                                 </div>
-                                <div className="detail-cell">
-                                    <span className="form-label">Sozialform</span>
-                                    <p className="text-sm">{phase.socialForm}</p>
+                            </div>
+
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mt-4 border-t pt-4 text-gray-600">
+                                <div>
+                                    <span className="font-bold block text-gray-500 text-xs uppercase tracking-wider">Sozialform</span>
+                                    {phase.socialForm}
                                 </div>
-                                <div className="detail-cell">
-                                    <span className="form-label">Material</span>
-                                    <p className="text-sm">{phase.materials?.join(', ')}</p>
+                                <div className="col-span-2">
+                                    <span className="font-bold block text-gray-500 text-xs uppercase tracking-wider">Material</span>
+                                    {phase.materials?.join(', ')}
+                                </div>
+                                <div>
+                                    <span className="font-bold block text-gray-500 text-xs uppercase tracking-wider">Methodik</span>
+                                    {phase.didacticComment || 'k.A.'}
                                 </div>
                             </div>
 
                             {/* Differentiation */}
-                            <div className="diff-levels mt-4">
-                                <div className="diff-level diff-level-a">
-                                    <span className="diff-level-label">A — Basis</span>
-                                    <p className="text-sm">{phase.differentiation.niveauA}</p>
-                                </div>
-                                <div className="diff-level diff-level-b">
-                                    <span className="diff-level-label">B — Standard</span>
-                                    <p className="text-sm">{phase.differentiation.niveauB}</p>
-                                </div>
-                                <div className="diff-level diff-level-c">
-                                    <span className="diff-level-label">C — Challenge</span>
-                                    <p className="text-sm">{phase.differentiation.niveauC}</p>
+                            <div className="mt-6 bg-gray-50 p-4 rounded border border-gray-200">
+                                <h4 className="text-sm font-bold uppercase text-gray-500 mb-3 tracking-wider">Differenzierung</h4>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div className="text-sm border-l-2 border-yellow-400 pl-3">
+                                        <span className="block font-bold text-gray-700">Basis (A)</span>
+                                        {phase.differentiation.niveauA}
+                                    </div>
+                                    <div className="text-sm border-l-2 border-blue-400 pl-3">
+                                        <span className="block font-bold text-gray-700">Standard (B)</span>
+                                        {phase.differentiation.niveauB}
+                                    </div>
+                                    <div className="text-sm border-l-2 border-purple-400 pl-3">
+                                        <span className="block font-bold text-gray-700">Challenge (C)</span>
+                                        {phase.differentiation.niveauC}
+                                    </div>
                                 </div>
                             </div>
 
                             {/* Plan B */}
                             {phase.planBAlternative && (
-                                <div className="plan-b mt-4">
-                                    <span className="form-label">🔄 Plan B</span>
-                                    <p className="text-sm">{phase.planBAlternative}</p>
+                                <div className="mt-4 text-sm text-gray-500 flex gap-2 items-center bg-gray-100 p-2 rounded">
+                                    <span className="font-bold">🔄 Plan B:</span>
+                                    {phase.planBAlternative}
                                 </div>
                             )}
                         </div>
                     ))}
 
-                    {/* Assessment Rubric (Block L) */}
+                    {/* Assessment Rubric */}
                     {plan.detailPlan.assessmentRubric && (
-                        <div className="mt-8">
-                            <h3 className="mb-4">📊 Bewertungsraster (Lernprodukt)</h3>
+                        <div className="mt-8 bg-white p-6 rounded-lg shadow-sm border">
+                            <h3 className="mb-4 text-xl font-bold">📊 Bewertungsraster</h3>
                             <div className="overflow-x-auto">
                                 <table className="w-full text-sm border-collapse">
                                     <thead>
                                         <tr className="bg-gray-100 text-left">
-                                            <th className="p-2 border">Kriterium</th>
-                                            <th className="p-2 border">Niveau A (Basis)</th>
-                                            <th className="p-2 border">Niveau B (Standard)</th>
-                                            <th className="p-2 border">Niveau C (Challenge)</th>
+                                            <th className="p-3 border font-bold">Kriterium</th>
+                                            <th className="p-3 border font-bold text-yellow-700 bg-yellow-50">Niveau A</th>
+                                            <th className="p-3 border font-bold text-blue-700 bg-blue-50">Niveau B</th>
+                                            <th className="p-3 border font-bold text-purple-700 bg-purple-50">Niveau C</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {plan.detailPlan.assessmentRubric.map((r, i) => (
-                                            <tr key={i} className="border-b">
-                                                <td className="p-2 border font-medium">{r.criteria}</td>
-                                                <td className="p-2 border">{r.levelA}</td>
-                                                <td className="p-2 border">{r.levelB}</td>
-                                                <td className="p-2 border">{r.levelC}</td>
+                                            <tr key={i} className="border-b hover:bg-gray-50">
+                                                <td className="p-3 border font-medium">{r.criteria}</td>
+                                                <td className="p-3 border bg-yellow-50/30">{r.levelA}</td>
+                                                <td className="p-3 border bg-blue-50/30">{r.levelB}</td>
+                                                <td className="p-3 border bg-purple-50/30">{r.levelC}</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -278,11 +307,11 @@ export default function StepDetail() {
                         </div>
                     )}
 
-                    {/* Reflection Notes */}
+                    {/* Reflection */}
                     {plan.detailPlan.reflectionNotes && (
-                        <div className="card mt-4">
-                            <h3 className="mb-2">📝 Reflexionsnotiz</h3>
-                            <p className="text-secondary">{plan.detailPlan.reflectionNotes}</p>
+                        <div className="card mt-8 bg-indigo-50 border-indigo-100">
+                            <h3 className="mb-2 text-indigo-900">📝 Reflexionsfragen</h3>
+                            <p className="text-indigo-800 whitespace-pre-wrap">{plan.detailPlan.reflectionNotes}</p>
                         </div>
                     )}
                 </div>
